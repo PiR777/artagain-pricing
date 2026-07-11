@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Art again — Économie unitaire</title>
+<style>
+  :root{
+    --paper:#dcd9d2;      /* page — gris papier e-ink */
+    --paper-2:#e7e4dd;    /* surface relevée */
+    --paper-3:#eeece6;    /* surface la plus claire */
+    --ink:#2c2b28;        /* gris foncé (jamais noir) */
+    --ink-2:#56534d;
+    --ink-3:#8a877f;
+    --line:#b7b3a9;
+    --line-soft:#cbc7bd;
+    --inv-bg:#2c2b28;
+    --inv-fg:#e7e4dd;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --serif:Georgia,"Times New Roman",serif;
+    --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-font-smoothing:antialiased}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.5;
+    padding:clamp(20px,5vw,64px) clamp(16px,5vw,48px);
+  }
+  .wrap{max-width:1080px;margin:0 auto}
+
+  /* ---------- header ---------- */
+  header{border-bottom:1px solid var(--ink);padding-bottom:20px;margin-bottom:36px}
+  .brand{font-family:var(--serif);font-size:clamp(28px,4vw,40px);letter-spacing:.5px;font-weight:400}
+  .brand em{font-style:italic}
+  .eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+  .sub{font-size:14px;color:var(--ink-2);margin-top:8px;max-width:56ch}
+
+  /* ---------- section titles ---------- */
+  .sec-title{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);
+    padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:20px;display:flex;justify-content:space-between;align-items:baseline}
+  .sec-title span{color:var(--ink-2);letter-spacing:normal;text-transform:none;font-size:12px}
+
+  /* ---------- layout ---------- */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,48px);margin-bottom:44px}
+  @media(max-width:760px){.grid{grid-template-columns:1fr;gap:32px}}
+
+  /* ---------- controls ---------- */
+  .field{margin-bottom:22px}
+  .flabel{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin-bottom:9px;display:flex;justify-content:space-between}
+  .flabel b{font-family:var(--mono);font-weight:400;color:var(--ink);letter-spacing:0;font-variant-numeric:tabular-nums}
+
+  .seg{display:flex;border:1px solid var(--ink);width:100%}
+  .seg button{flex:1;background:transparent;border:0;border-right:1px solid var(--line);
+    padding:9px 6px;font-family:var(--sans);font-size:12.5px;color:var(--ink-2);cursor:pointer;letter-spacing:.02em;transition:none}
+  .seg button:last-child{border-right:0}
+  .seg button.on{background:var(--inv-bg);color:var(--inv-fg)}
+  .seg.small button{font-size:11.5px;padding:8px 4px}
+
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:1px;background:var(--ink);outline:none;margin:14px 0 4px}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;background:var(--inv-bg);border:2px solid var(--paper);cursor:pointer;border-radius:0}
+  input[type=range]::-moz-range-thumb{width:16px;height:16px;background:var(--inv-bg);border:2px solid var(--paper);cursor:pointer;border-radius:0}
+  .range-ends{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+
+  .num-row{display:grid;grid-template-columns:1fr 1fr;gap:14px 20px}
+  .num-field label{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);display:block;margin-bottom:5px}
+  .num-field input{width:100%;background:transparent;border:0;border-bottom:1px solid var(--line);
+    font-family:var(--mono);font-size:15px;color:var(--ink);padding:4px 0;outline:none;font-variant-numeric:tabular-nums}
+  .num-field input:focus{border-bottom-color:var(--ink)}
+  .hint{font-size:10.5px;color:var(--ink-3);margin-top:3px}
+
+  /* ---------- readout ---------- */
+  .readout{background:var(--paper-3);border:1px solid var(--line)}
+  .r-line{display:flex;justify-content:space-between;align-items:baseline;padding:11px 18px;border-bottom:1px solid var(--line-soft)}
+  .r-line:last-child{border-bottom:0}
+  .r-line .k{font-size:12.5px;color:var(--ink-2)}
+  .r-line .k small{color:var(--ink-3);font-size:11px}
+  .r-line .v{font-family:var(--mono);font-size:15px;font-variant-numeric:tabular-nums}
+  .r-sub{padding-left:34px !important}
+  .r-sub .k{color:var(--ink-3);font-size:12px}
+  .r-sub .v{color:var(--ink-2);font-size:13.5px}
+
+  .r-hero{background:var(--inv-bg);color:var(--inv-fg);padding:18px}
+  .r-hero .cap{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#a8a49b;margin-bottom:8px;display:flex;justify-content:space-between}
+  .r-hero .big{font-family:var(--mono);font-size:clamp(30px,6vw,42px);line-height:1;font-variant-numeric:tabular-nums}
+  .r-hero .note{font-size:11.5px;color:#b4b0a6;margin-top:9px;max-width:38ch}
+
+  .r-profit{display:flex;justify-content:space-between;align-items:center;padding:15px 18px;border:1px solid var(--ink);margin-top:14px}
+  .r-profit.loss{background:var(--inv-bg);color:var(--inv-fg);border-color:var(--inv-bg)}
+  .r-profit .plab{font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+  .r-profit .pval{font-family:var(--mono);font-size:22px;font-variant-numeric:tabular-nums;text-align:right}
+  .r-profit .pval small{display:block;font-size:11px;opacity:.7;letter-spacing:.05em}
+  .tag{font-size:10px;letter-spacing:.16em;text-transform:uppercase;border:1px solid currentColor;padding:2px 7px;margin-left:10px}
+
+  /* ---------- matrix ---------- */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  caption{text-align:left;font-size:12px;color:var(--ink-2);margin-bottom:14px;line-height:1.45}
+  th,td{padding:11px 12px;text-align:right;border-bottom:1px solid var(--line-soft)}
+  thead th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:400;border-bottom:1px solid var(--line)}
+  tbody th{text-align:left;font-weight:400;color:var(--ink);font-family:var(--sans)}
+  tbody th small{display:block;color:var(--ink-3);font-size:11px;font-family:var(--mono)}
+  .cell{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .cell b{font-weight:400;font-size:14.5px}
+  .cell small{display:block;color:var(--ink-3);font-size:11px;margin-top:2px}
+  td.on{background:var(--paper-3);outline:1px solid var(--ink);outline-offset:-1px}
+  td.lossc{background:var(--inv-bg);color:var(--inv-fg)}
+  td.lossc small{color:#b4b0a6}
+  .model-tag{font-size:10px;letter-spacing:.14em;color:var(--ink-3);text-transform:uppercase}
+
+  footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink-3);line-height:1.7}
+  footer b{color:var(--ink-2);font-weight:400}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:14px;font-size:11px;color:var(--ink-2)}
+  .swatch{display:inline-block;width:11px;height:11px;vertical-align:-1px;margin-right:6px;border:1px solid var(--ink)}
+  .swatch.dark{background:var(--inv-bg)}
+  .swatch.light{background:var(--paper-3)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">The Space · 13,3″ e-ink · économie unitaire</div>
+    <div class="brand">Art <em>again</em></div>
+    <p class="sub">Combien reste-t-il par cadre après le coût produit, la logistique et l'acquisition. Le chiffre qui compte : le <b>CAC maximum</b> — ce que tu peux payer en pub avant de perdre de l'argent sur une vente.</p>
+  </header>
+
+  <div class="grid">
+    <!-- ============ CONTROLES ============ -->
+    <div>
+      <div class="sec-title">Paramètres</div>
+
+      <div class="field">
+        <div class="flabel">Modèle</div>
+        <div class="seg" id="seg-model">
+          <button data-v="nb" class="on">N&amp;B — ED133UT2/3</button>
+          <button data-v="couleur">Couleur — Spectra 6</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="flabel">Palier de quantité <b id="lbl-bom"></b></div>
+        <div class="seg small" id="seg-tier">
+          <button data-v="0" class="on">≤ 100</button>
+          <button data-v="1">101–1000</button>
+          <button data-v="2">1001–5000</button>
+          <button data-v="3">≥ 5001</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="flabel">Canal de vente</div>
+        <div class="seg" id="seg-channel">
+          <button data-v="site" class="on">Site propre (Stripe)</button>
+          <button data-v="ks">Kickstarter</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="flabel">Prix de vente TTC <b><span id="lbl-price"></span> €</b></div>
+        <input type="range" id="price" min="250" max="650" step="5" value="449" />
+        <div class="range-ends"><span>250 €</span><span>650 €</span></div>
+      </div>
+
+      <div class="field">
+        <div class="flabel">CAC — coût d'acquisition / cadre <b><span id="lbl-cac"></span> €</b></div>
+        <input type="range" id="cac" min="0" max="200" step="5" value="90" />
+        <div class="range-ends"><span>0 €</span><span>200 €</span></div>
+      </div>
+
+      <div class="num-row">
+        <div class="num-field">
+          <label>TVA %</label>
+          <input type="number" id="tva" value="20" step="1" />
+        </div>
+        <div class="num-field">
+          <label>Casse / retours %</label>
+          <input type="number" id="casse" value="5" step="1" />
+          <div class="hint">% du coût BOM</div>
+        </div>
+        <div class="num-field">
+          <label>Packaging € / u</label>
+          <input type="number" id="pack" value="18" step="1" />
+        </div>
+        <div class="num-field">
+          <label>Port offert € / u</label>
+          <input type="number" id="port" value="12" step="1" />
+        </div>
+        <div class="num-field">
+          <label>Frais paiement %</label>
+          <input type="number" id="payp" value="1.5" step="0.1" />
+          <div class="hint">auto : site 1,5 · KS 9</div>
+        </div>
+        <div class="num-field">
+          <label>Frais fixe paiement €</label>
+          <input type="number" id="payf" value="0.25" step="0.05" />
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ READOUT ============ -->
+    <div>
+      <div class="sec-title">Résultat / cadre <span id="ctx"></span></div>
+
+      <div class="readout">
+        <div class="r-line"><div class="k">Prix TTC</div><div class="v" id="o-ttc"></div></div>
+        <div class="r-line"><div class="k">Prix HT <small>(hors TVA)</small></div><div class="v" id="o-ht"></div></div>
+        <div class="r-line"><div class="k">Coût BOM</div><div class="v" id="o-bom"></div></div>
+        <div class="r-line"><div class="k">Marge brute HT</div><div class="v" id="o-gm"></div></div>
+        <div class="r-line r-sub"><div class="k">Packaging</div><div class="v" id="o-pack"></div></div>
+        <div class="r-line r-sub"><div class="k">Port</div><div class="v" id="o-port"></div></div>
+        <div class="r-line r-sub"><div class="k">Casse / retours</div><div class="v" id="o-casse"></div></div>
+        <div class="r-line r-sub"><div class="k">Frais paiement</div><div class="v" id="o-pay"></div></div>
+      </div>
+
+      <div class="r-hero" style="margin-top:14px">
+        <div class="cap"><span>CAC maximum · point mort</span><span id="o-gmpct"></span></div>
+        <div class="big" id="o-breakeven"></div>
+        <div class="note">Au-delà de ce coût d'acquisition, chaque vente te fait perdre de l'argent.</div>
+      </div>
+
+      <div class="r-profit" id="profit-box">
+        <div class="plab">Profit net / cadre<span class="tag" id="profit-tag"></span></div>
+        <div class="pval"><span id="o-profit"></span><small id="o-netpct"></small></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MATRICE ============ -->
+  <div>
+    <div class="sec-title">Matrice de décision — où l'économie « respire »</div>
+    <table>
+      <caption>CAC maximum (point mort) par palier de volume, au prix et canal choisis. En dessous : profit net au CAC saisi. <b>Cellule en gris foncé = perte</b> à ce CAC.</caption>
+      <thead>
+        <tr>
+          <th style="text-align:left">Palier</th>
+          <th>N&amp;B — CAC max</th>
+          <th>N&amp;B — profit @CAC</th>
+          <th>Couleur — CAC max</th>
+          <th>Couleur — profit @CAC</th>
+        </tr>
+      </thead>
+      <tbody id="matrix"></tbody>
+    </table>
+  </div>
+
+  <footer>
+    <div class="legend">
+      <span><span class="swatch light"></span>Sélection active</span>
+      <span><span class="swatch dark"></span>Perte au CAC saisi</span>
+    </div>
+    <b>Hypothèses.</b> BOM net HT issus du sourcing (N&amp;B ED133UT2/3 · Couleur Spectra 6 EL133UF3), 4 paliers de quantité. Marge calculée en HT (la TVA est reversée). Frais paiement appliqués au TTC encaissé. Casse en % du BOM. Tous les paramètres sont éditables à gauche — les chiffres se recalculent en direct.<br>
+    <b>Lecture.</b> CAC max = marge brute HT − packaging − port − casse − frais paiement. C'est le budget pub par cadre avant perte. Le profit net = CAC max − CAC réel.<br>
+    Outil interne · Art again × Arthur.
+  </footer>
+
+</div>
+
+<script>
+// ---------- données BOM (EUR net HT) ----------
+const TIERS = ["≤ 100","101–1000","1001–5000","≥ 5001"];
+const BOM = {
+  nb:      [212.20, 202.60, 167.46, 140.95],
+  couleur: [167.67, 167.67, 150.00, 132.22]
+};
+const MODEL_LABEL = { nb:"N&B", couleur:"Couleur" };
+
+// ---------- état ----------
+const S = { model:"nb", tier:0, channel:"site", price:449, cac:90 };
+
+// ---------- helpers ----------
+const $ = id => document.getElementById(id);
+const eur = n => n.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2}) + " €";
+const eur0 = n => Math.round(n).toLocaleString("fr-FR") + " €";
+const pct = n => (n>=0?"":"") + n.toLocaleString("fr-FR",{minimumFractionDigits:1,maximumFractionDigits:1}) + " %";
+
+function inputs(){
+  return {
+    tva:  parseFloat($("tva").value)||0,
+    casse:parseFloat($("casse").value)||0,
+    pack: parseFloat($("pack").value)||0,
+    port: parseFloat($("port").value)||0,
+    payp: parseFloat($("payp").value)||0,
+    payf: parseFloat($("payf").value)||0
+  };
+}
+
+// calcule l'éco pour un modèle/palier/prix donnés
+function economics(model, tier, price, inp){
+  const bom = BOM[model][tier];
+  const ht  = price / (1 + inp.tva/100);
+  const casse = bom * inp.casse/100;
+  const payFee = price * inp.payp/100 + inp.payf;
+  const grossMargin = ht - bom;
+  const variable = inp.pack + inp.port + casse + payFee;
+  const breakeven = grossMargin - variable;      // = CAC max
+  return { bom, ht, casse, payFee, grossMargin, variable, breakeven,
+           gmPct: grossMargin/ht*100 };
+}
+
+function render(){
+  const inp = inputs();
+  const e = economics(S.model, S.tier, S.price, inp);
+  const profit = e.breakeven - S.cac;
+  const netPct = profit / e.ht * 100;
+
+  // labels contrôles
+  $("lbl-bom").textContent   = eur(BOM[S.model][S.tier]);
+  $("lbl-price").textContent = S.price;
+  $("lbl-cac").textContent   = S.cac;
+  $("ctx").textContent = MODEL_LABEL[S.model] + " · " + TIERS[S.tier] + " · " + (S.channel==="site"?"Site":"Kickstarter");
+
+  // readout
+  $("o-ttc").textContent   = eur(S.price);
+  $("o-ht").textContent    = eur(e.ht);
+  $("o-bom").textContent   = "− " + eur(e.bom);
+  $("o-gm").textContent    = eur(e.grossMargin);
+  $("o-pack").textContent  = "− " + eur(inp.pack);
+  $("o-port").textContent  = "− " + eur(inp.port);
+  $("o-casse").textContent = "− " + eur(e.casse);
+  $("o-pay").textContent   = "− " + eur(e.payFee);
+
+  $("o-breakeven").textContent = eur0(e.breakeven);
+  $("o-gmpct").textContent = "marge brute " + pct(e.gmPct);
+
+  $("o-profit").textContent = (profit>=0?"+ ":"− ") + eur(Math.abs(profit));
+  $("o-netpct").textContent = "marge nette " + pct(netPct);
+  const box = $("profit-box"), tag = $("profit-tag");
+  if(profit < 0){ box.classList.add("loss"); tag.textContent = "Perte"; }
+  else { box.classList.remove("loss"); tag.textContent = "Profit"; }
+
+  // matrice
+  const rows = TIERS.map((t,i)=>{
+    const nb = economics("nb", i, S.price, inp);
+    const co = economics("couleur", i, S.price, inp);
+    const nbP = nb.breakeven - S.cac;
+    const coP = co.breakeven - S.cac;
+    const active = i===S.tier;
+    const c = (val, active) => `<td class="cell ${active?'on':''}"><b>${eur0(val)}</b></td>`;
+    const p = (val, active) => `<td class="cell ${val<0?'lossc':''} ${active?'on':''}"><b>${(val>=0?'+ ':'− ')+eur0(Math.abs(val))}</b></td>`;
+    return `<tr>
+      <th>${t}<small>N&B ${eur0(BOM.nb[i])} · Coul. ${eur0(BOM.couleur[i])}</small></th>
+      ${c(nb.breakeven, active)}${p(nbP, active)}
+      ${c(co.breakeven, active)}${p(coP, active)}
+    </tr>`;
+  }).join("");
+  $("matrix").innerHTML = rows;
+}
+
+// ---------- interactions ----------
+function bindSeg(segId, key, cast){
+  const seg = $(segId);
+  seg.addEventListener("click", ev=>{
+    const b = ev.target.closest("button"); if(!b) return;
+    seg.querySelectorAll("button").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on");
+    S[key] = cast ? cast(b.dataset.v) : b.dataset.v;
+    // canal → préset frais paiement
+    if(key==="channel"){
+      if(S.channel==="ks"){ $("payp").value=9; $("payf").value=0; }
+      else { $("payp").value=1.5; $("payf").value=0.25; }
+    }
+    render();
+  });
+}
+bindSeg("seg-model","model");
+bindSeg("seg-tier","tier",v=>parseInt(v));
+bindSeg("seg-channel","channel");
+
+$("price").addEventListener("input",e=>{S.price=parseInt(e.target.value);render();});
+$("cac").addEventListener("input",e=>{S.cac=parseInt(e.target.value);render();});
+["tva","casse","pack","port","payp","payf"].forEach(id=>{
+  $(id).addEventListener("input",render);
+});
+
+render();
+</script>
+</body>
+</html>
