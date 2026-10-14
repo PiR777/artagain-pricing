@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Art again — Économie unitaire</title>
+<title>art again — Économie unitaire</title>
 <style>
   :root{
     --paper:#dcd9d2;      /* page — gris papier e-ink */
@@ -16,6 +16,9 @@
     --line-soft:#cbc7bd;
     --inv-bg:#2c2b28;
     --inv-fg:#e7e4dd;
+    --loss:#6b2f2b;       /* bordeaux sourd, perte */
+    --loss-fg:#f0e6e2;
+    --loss-sub:#d9bcb6;
     --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
     --serif:Georgia,"Times New Roman",serif;
     --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -37,6 +40,9 @@
   .brand em{font-style:italic}
   .eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
   .sub{font-size:14px;color:var(--ink-2);margin-top:8px;max-width:56ch}
+  .src{font-size:12px;color:var(--ink-3);margin-top:10px}
+  .src a{color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+  .src a:hover{color:var(--ink)}
   .version{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;border:1px solid var(--ink-3);color:var(--ink-2);padding:1px 7px;margin-left:10px;vertical-align:4px}
 
   /* ---------- section titles ---------- */
@@ -117,15 +123,16 @@
     .cell small,thead th small{font-size:10px}
   }
   td.on{background:var(--paper-3);outline:1px solid var(--ink);outline-offset:-1px}
-  td.lossc{background:var(--inv-bg);color:var(--inv-fg)}
-  td.lossc small{color:#b4b0a6}
+  td.lossc{background:var(--loss);color:var(--loss-fg)}
+  td.lossc small{color:var(--loss-sub)}
+  td.lossc.on{outline-color:var(--ink);outline-width:2px;outline-offset:-2px}
 
   footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink-3);line-height:1.7}
   footer b{color:var(--ink-2);font-weight:400}
   footer p{margin-bottom:8px}
   .legend{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:14px;font-size:11px;color:var(--ink-2)}
   .swatch{display:inline-block;width:11px;height:11px;vertical-align:-1px;margin-right:6px;border:1px solid var(--ink)}
-  .swatch.dark{background:var(--inv-bg)}
+  .swatch.loss{background:var(--loss);border-color:var(--loss)}
   .swatch.light{background:var(--paper-3)}
 </style>
 </head>
@@ -134,8 +141,9 @@
 
   <header>
     <div class="eyebrow">The Space · 13,3″ e-ink · économie unitaire</div>
-    <div class="brand">Art <em>again</em><span class="version">v2.0 · BOM 14/10/2026</span></div>
+    <div class="brand"><em>art again</em><span class="version">v2.0 · BOM 14/10/2026</span></div>
     <p class="sub">Combien reste-t-il par cadre après le coût de revient, la logistique et l'acquisition. Le chiffre qui compte : le <b>CAC maximum</b> — ce que tu peux payer en pub avant de perdre de l'argent sur une vente.</p>
+    <p class="src">Données : <a href="https://docs.google.com/spreadsheets/d/1enrAAC686xsUv9-664phko8rvRs_hjM1fLqqHbzYkqs/edit" target="_blank" rel="noopener">Structure de coût PixelFrame ↗</a> — sheet d'Arthur, accès sur invitation</p>
   </header>
 
   <div class="grid">
@@ -172,7 +180,7 @@
 
       <div class="field">
         <div class="flabel">Prix de vente TTC <b><span id="lbl-price"></span> €</b></div>
-        <input type="range" id="price" min="250" max="650" step="5" value="449" />
+        <input type="range" id="price" min="250" max="650" step="5" value="400" />
         <div class="range-ends"><span>250 €</span><span>650 €</span></div>
       </div>
 
@@ -198,9 +206,9 @@
           <div class="hint">entrepôt France → client</div>
         </div>
         <div class="num-field">
-          <label>Packaging additionnel € / u</label>
-          <input type="number" id="pack" value="0" step="1" />
-          <div class="hint">8,93 € déjà inclus dans la BOM</div>
+          <label>Packaging € / u</label>
+          <input type="number" id="pack" value="9" step="0.5" />
+          <div class="hint">provisoire · sheet : 8,93 €</div>
         </div>
         <div class="num-field">
           <label>Frais paiement %</label>
@@ -224,10 +232,9 @@
         <div class="r-line"><div class="k">Coût de revient <small>(rendu France)</small></div><div class="v" id="o-bom"></div></div>
         <div class="r-line r-sub"><div class="k">Produit : écran + électronique<span class="est">≈</span></div><div class="v" id="o-prod"></div></div>
         <div class="r-line r-sub"><div class="k">Middle frame + cadre alu + passe-partout<span class="est">≈</span></div><div class="v" id="o-frame"></div></div>
-        <div class="r-line r-sub"><div class="k">Packaging (provisoire)<span class="est">≈</span></div><div class="v" id="o-bpack"></div></div>
+        <div class="r-line r-sub"><div class="k">Packaging (provisoire, saisi à gauche)<span class="est">≈</span></div><div class="v" id="o-bpack"></div></div>
         <div class="r-line r-sub"><div class="k">Transport Chine → France<span class="est">≈</span></div><div class="v" id="o-ship"></div></div>
         <div class="r-line"><div class="k">Marge brute HT</div><div class="v" id="o-gm"></div></div>
-        <div class="r-line r-sub" id="row-pack"><div class="k">Packaging additionnel</div><div class="v" id="o-pack"></div></div>
         <div class="r-line r-sub"><div class="k">Port client</div><div class="v" id="o-port"></div></div>
         <div class="r-line r-sub"><div class="k">Casse / retours</div><div class="v" id="o-casse"></div></div>
         <div class="r-line r-sub"><div class="k">Frais paiement</div><div class="v" id="o-pay"></div></div>
@@ -249,7 +256,7 @@
   <!-- ============ MATRICE ============ -->
   <div>
     <div class="sec-title">Matrice de décision — où l'économie « respire »</div>
-    <p class="caption">Par palier et par modèle, au prix et canal choisis : <b>CAC maximum</b> (point mort) en gros, profit net au CAC saisi en dessous, coût de revient en petit. <b>Cellule en gris foncé = perte</b> à ce CAC.</p>
+    <p class="caption">Par palier et par modèle, au prix et canal choisis : <b>CAC maximum</b> (point mort) en gros, profit net au CAC saisi en dessous, coût de revient en petit. <b>Cellule bordeaux = perte</b> à ce CAC.</p>
     <div class="table-wrap">
       <table>
         <thead>
@@ -268,13 +275,13 @@
   <footer>
     <div class="legend">
       <span><span class="swatch light"></span>Sélection active</span>
-      <span><span class="swatch dark"></span>Perte au CAC saisi</span>
+      <span><span class="swatch loss"></span>Perte au CAC saisi</span>
       <span><span class="est" style="margin:0 6px 0 0">≈</span>Estimation à confirmer</span>
     </div>
-    <p><b>Source.</b> Sheet « Structure de coût PixelFrame » d'Arthur, mis à jour le 14/10/2026. Coût de revient = « Total BOM complète » : produit (écran + électronique) + middle frame + cadre alu et passe-partout + packaging + transport Chine → France (aérien, lot de 500) + douane (TARIC 8531807000, 0 %). Montants en EUR net HT, cours du 14/10/2026 (USD 0,8935 · CNY 0,1335), TVA chinoise de 13 % retirée.</p>
+    <p><b>Source.</b> Sheet <a href="https://docs.google.com/spreadsheets/d/1enrAAC686xsUv9-664phko8rvRs_hjM1fLqqHbzYkqs/edit" target="_blank" rel="noopener" style="color:inherit">« Structure de coût PixelFrame »</a> d'Arthur, mis à jour le 14/10/2026. Coût de revient = « Total BOM complète » : produit (écran + électronique) + middle frame + cadre alu et passe-partout + packaging (valeur saisie, 8,93 € dans le sheet) + transport Chine → France (aérien, lot de 500) + douane (TARIC 8531807000, 0 %). Montants en EUR net HT, cours du 14/10/2026 (USD 0,8935 · CNY 0,1335), TVA chinoise de 13 % retirée.</p>
     <p><b>Estimations.</b> Électronique + méca = produit SeekInk complet − dalle Spectra 6, appliqué aux trois modèles. C'est pour ça que le N&amp;B 300 PPI coûte plus cher à 101–1000 qu'à ≤ 100 (la dalle couleur baisse, le SeekInk non). Middle frame, cadre alu et packaging sont chiffrés à 500 unités seulement et repris sur tous les paliers. Certification CE (≈ 1 340–1 790 € une fois) non incluse.</p>
-    <p><b>Lecture.</b> CAC max = prix HT − coût de revient − packaging additionnel − port client − casse − frais paiement. Le profit net = CAC max − CAC réel. Marge calculée en HT, frais paiement appliqués au TTC encaissé, casse en % du coût de revient.</p>
-    <p>Outil interne · Art again × Arthur · v2.0 — changements depuis la v1 : CHANGELOG.md du repo.</p>
+    <p><b>Lecture.</b> CAC max = prix HT − coût de revient − port client − casse − frais paiement. Le profit net = CAC max − CAC réel. Marge calculée en HT, frais paiement appliqués au TTC encaissé, casse en % du coût de revient.</p>
+    <p>Outil interne · art again × Arthur · v2.0 — changements depuis la v1 : CHANGELOG.md du repo.</p>
   </footer>
 
 </div>
@@ -292,7 +299,7 @@ const TOTAL = {
 // postes communs aux 3 modèles (chiffrés à 500 u, repris sur tous les paliers)
 const COMMON = {
   frame: 8.93 + 9.83,   // middle frame housing + black aluminium frame & mat board
-  pack:  8.93,          // packaging (prix provisoire)
+  pack:  8.93,          // packaging du sheet (remplacé par la valeur saisie)
   ship:  12.37,         // transport Chine → France, aérien, lot de 500
   duty:  0              // TARIC 8531807000 : 0 %
 };
@@ -300,7 +307,7 @@ const MODEL_LABEL = { couleur:"Couleur", nb150:"N&B 150 PPI", nb300:"N&B 300 PPI
 const MODELS = ["couleur","nb150","nb300"];
 
 // ---------- état ----------
-const S = { model:"nb150", tier:0, channel:"site", price:449, cac:90 };
+const S = { model:"nb150", tier:0, channel:"site", price:400, cac:90 };
 
 // ---------- helpers ----------
 const $ = id => document.getElementById(id);
@@ -320,20 +327,25 @@ function inputs(){
   };
 }
 
+// coût de revient = total du sheet, avec le packaging remplacé par la valeur saisie
+function landedCost(model, tier, pack){
+  return TOTAL[model][tier] - COMMON.pack + pack;
+}
+
 function breakdown(model, tier){
-  const total = TOTAL[model][tier];
+  const sheetTotal = TOTAL[model][tier];
   const others = COMMON.frame + COMMON.pack + COMMON.ship + COMMON.duty;
-  return { total, prod: total - others, frame: COMMON.frame, pack: COMMON.pack, ship: COMMON.ship };
+  return { prod: sheetTotal - others, frame: COMMON.frame, ship: COMMON.ship };
 }
 
 // calcule l'éco pour un modèle/palier/prix donnés
 function economics(model, tier, price, inp){
-  const bom = TOTAL[model][tier];
+  const bom = landedCost(model, tier, inp.pack);
   const ht  = price / (1 + inp.tva/100);
   const casse = bom * inp.casse/100;
   const payFee = price * inp.payp/100 + inp.payf;
   const grossMargin = ht - bom;
-  const variable = inp.pack + inp.port + casse + payFee;
+  const variable = inp.port + casse + payFee;
   const breakeven = grossMargin - variable;      // = CAC max
   return { bom, ht, casse, payFee, grossMargin, variable, breakeven,
            gmPct: grossMargin/ht*100 };
@@ -347,7 +359,7 @@ function render(){
   const netPct = profit / e.ht * 100;
 
   // labels contrôles
-  $("lbl-bom").textContent   = eur(b.total);
+  $("lbl-bom").textContent   = eur(e.bom);
   $("lbl-price").textContent = S.price;
   $("lbl-cac").textContent   = S.cac;
   $("ctx").textContent = MODEL_LABEL[S.model] + " · " + TIERS[S.tier] + " · " + (S.channel==="site"?"Site":"Kickstarter");
@@ -355,14 +367,12 @@ function render(){
   // readout
   $("o-ttc").textContent   = eur(S.price);
   $("o-ht").textContent    = eur(e.ht);
-  $("o-bom").textContent   = "− " + eur(b.total);
+  $("o-bom").textContent   = "− " + eur(e.bom);
   $("o-prod").textContent  = eur(b.prod);
   $("o-frame").textContent = eur(b.frame);
-  $("o-bpack").textContent = eur(b.pack);
+  $("o-bpack").textContent = eur(inp.pack);
   $("o-ship").textContent  = eur(b.ship);
   $("o-gm").textContent    = eur(e.grossMargin);
-  $("row-pack").hidden     = inp.pack === 0;
-  $("o-pack").textContent  = "− " + eur(inp.pack);
   $("o-port").textContent  = "− " + eur(inp.port);
   $("o-casse").textContent = "− " + eur(e.casse);
   $("o-pay").textContent   = "− " + eur(e.payFee);

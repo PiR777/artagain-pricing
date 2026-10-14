@@ -14,11 +14,14 @@ Mise à jour sur la base du sheet « Structure de coût PixelFrame » d'Arthur (
   - douane : 0 %.
 - **Le N&B est séparé en deux modèles** : N&B 150 PPI (ED133UT2/3, l'ancien « N&B ») et N&B 300 PPI (ED133KC1 Carta 1300 + Tcon Himax T2000).
 - Cours actualisés au 14/10/2026 : USD 0,8732 → 0,8935 (+2,3 %) et CNY 0,1288 → 0,1335 (+3,6 %).
-- Le champ « Packaging » devient « Packaging additionnel », à 0 € par défaut, puisque le packaging est inclus dans la BOM.
+- Le packaging reste un champ modifiable, puisque son prix est provisoire. Il vaut 9 € par défaut (8,93 € dans le sheet) et remplace la ligne packaging du sheet dans le coût de revient.
+- Le prix par défaut passe de 449 € à 400 €, le prix actuel.
+- Ajout d'un lien vers le sheet source (en tête de page et dans le pied de page).
+- Dans la matrice, les cas de perte sont en bordeaux. Le titre passe en « art again », en minuscules et italique.
 - Le champ « Port » devient « Port client offert » (entrepôt France → client). Il est distinct du transport Chine → France.
 - La matrice passe à 3 modèles. Chaque cellule montre le CAC max, le profit au CAC saisi et le coût de revient.
 
-### Impact (site, prix 449 €, CAC max au palier ≤ 100)
+### Impact à prix constant (site, 449 €, CAC max au palier ≤ 100)
 | Modèle | v1 | v2 | Écart |
 |---|---|---|---|
 | Couleur | 161 € | 131 € | −30 € |
