@@ -141,7 +141,7 @@
 
   <header>
     <div class="eyebrow">The Space · 13,3″ e-ink · économie unitaire</div>
-    <div class="brand"><em>art again</em><span class="version">v2.0 · BOM 14/10/2026</span></div>
+    <div class="brand"><em>art again</em><span class="version">v2.1 · BOM 14/11/2026</span></div>
     <p class="sub">Combien reste-t-il par cadre après le coût de revient, la logistique et l'acquisition. Le chiffre qui compte : le <b>CAC maximum</b> — ce que tu peux payer en pub avant de perdre de l'argent sur une vente.</p>
     <p class="src">Données : <a href="https://docs.google.com/spreadsheets/d/1enrAAC686xsUv9-664phko8rvRs_hjM1fLqqHbzYkqs/edit" target="_blank" rel="noopener">Structure de coût PixelFrame ↗</a> — sheet d'Arthur, accès sur invitation</p>
   </header>
@@ -208,7 +208,7 @@
         <div class="num-field">
           <label>Packaging € / u</label>
           <input type="number" id="pack" value="9" step="0.5" />
-          <div class="hint">provisoire · sheet : 8,93 €</div>
+          <div class="hint">provisoire · sheet : 9,07 €</div>
         </div>
         <div class="num-field">
           <label>Frais paiement %</label>
@@ -278,29 +278,29 @@
       <span><span class="swatch loss"></span>Perte au CAC saisi</span>
       <span><span class="est" style="margin:0 6px 0 0">≈</span>Estimation à confirmer</span>
     </div>
-    <p><b>Source.</b> Sheet <a href="https://docs.google.com/spreadsheets/d/1enrAAC686xsUv9-664phko8rvRs_hjM1fLqqHbzYkqs/edit" target="_blank" rel="noopener" style="color:inherit">« Structure de coût PixelFrame »</a> d'Arthur, mis à jour le 14/10/2026. Coût de revient = « Total BOM complète » : produit (écran + électronique) + middle frame + cadre alu et passe-partout + packaging (valeur saisie, 8,93 € dans le sheet) + transport Chine → France (aérien, lot de 500) + douane (TARIC 8531807000, 0 %). Montants en EUR net HT, cours du 14/10/2026 (USD 0,8935 · CNY 0,1335), TVA chinoise de 13 % retirée.</p>
-    <p><b>Estimations.</b> Électronique + méca = produit SeekInk complet − dalle Spectra 6, appliqué aux trois modèles. C'est pour ça que le N&amp;B 300 PPI coûte plus cher à 101–1000 qu'à ≤ 100 (la dalle couleur baisse, le SeekInk non). Middle frame, cadre alu et packaging sont chiffrés à 500 unités seulement et repris sur tous les paliers. Certification CE (≈ 1 340–1 790 € une fois) non incluse.</p>
+    <p><b>Source.</b> Sheet <a href="https://docs.google.com/spreadsheets/d/1enrAAC686xsUv9-664phko8rvRs_hjM1fLqqHbzYkqs/edit" target="_blank" rel="noopener" style="color:inherit">« Structure de coût PixelFrame »</a> d'Arthur, mis à jour le 14/11/2026. Coût de revient = « Total BOM complète » : produit (écran + électronique) + middle frame + cadre alu et passe-partout + packaging (valeur saisie, 9,07 € dans le sheet) + transport Chine → France (aérien, lot de 500) + douane (TARIC 8531807000, 0 %). Montants en EUR net HT, cours du 14/11/2026 (USD 0,9072). Produit SeekInk complet chiffré en USD HT (devis du 4/11/2026).</p>
+    <p><b>Estimations.</b> Électronique + méca = produit SeekInk complet − dalle Spectra 6, appliqué aux trois modèles. Le devis SeekInk n'a que 3 paliers : ≥ 5001 reprend le prix de 1001–5000. Middle frame, cadre alu et packaging sont chiffrés à 500 unités seulement et repris sur tous les paliers. Certification CE (≈ 1 360–1 815 € une fois) non incluse. Les devis packaging (≈ 2,60–10 €/u selon fournisseur et palier) et cadre Nielsen (14–19 €/u) sont dans le sheet mais pas encore intégrés à la BOM.</p>
     <p><b>Lecture.</b> CAC max = prix HT − coût de revient − port client − casse − frais paiement. Le profit net = CAC max − CAC réel. Marge calculée en HT, frais paiement appliqués au TTC encaissé, casse en % du coût de revient.</p>
-    <p>Outil interne · art again × Arthur · v2.0 — changements depuis la v1 : CHANGELOG.md du repo.</p>
+    <p>Outil interne · art again × Arthur · v2.1 — changements depuis les versions précédentes : CHANGELOG.md du repo.</p>
   </footer>
 
 </div>
 
 <script>
-// ---------- données (EUR net HT, sheet d'Arthur du 14/10/2026) ----------
+// ---------- données (EUR net HT, sheet d'Arthur du 14/11/2026) ----------
 const TIERS = ["≤ 100","101–1000","1001–5000","≥ 5001"];
 
 // « Total BOM complète » par modèle et par palier
 const TOTAL = {
-  couleur: [213.86, 213.86, 195.55, 177.12],
-  nb150:   [259.43, 249.60, 213.42, 186.05],
-  nb300:   [216.81, 224.85, 212.79, 192.57]
+  couleur: [218.14, 187.58, 177.72, 177.72],
+  nb150:   [264.41, 223.87, 195.87, 186.79],
+  nb300:   [221.14, 198.74, 195.23, 193.42]
 };
 // postes communs aux 3 modèles (chiffrés à 500 u, repris sur tous les paliers)
 const COMMON = {
-  frame: 8.93 + 9.83,   // middle frame housing + black aluminium frame & mat board
-  pack:  8.93,          // packaging du sheet (remplacé par la valeur saisie)
-  ship:  12.37,         // transport Chine → France, aérien, lot de 500
+  frame: 9.07 + 9.98,   // middle frame housing + black aluminium frame & mat board
+  pack:  9.07,          // packaging du sheet (remplacé par la valeur saisie)
+  ship:  12.54,         // transport Chine → France, aérien, lot de 500
   duty:  0              // TARIC 8531807000 : 0 %
 };
 const MODEL_LABEL = { couleur:"Couleur", nb150:"N&B 150 PPI", nb300:"N&B 300 PPI" };

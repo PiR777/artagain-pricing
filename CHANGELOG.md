@@ -2,6 +2,26 @@
 
 Simulateur d'économie unitaire Art again. Versions suivant [SemVer](https://semver.org/lang/fr/), une release GitHub par version.
 
+## [2.1.0] — 2026-11-14
+
+Mise à jour des données sur la base du sheet d'Arthur du 14/11/2026. Aucun changement de fonctionnement.
+
+### Modifié
+- **Nouveau devis SeekInk** (mail du 4/11) en USD HT, au lieu de CNY TTC. Le produit complet passe à 177,48 / 146,92 / 137,06 / 137,06 € par palier (contre 173,80 / 173,80 / 155,48 / 137,05 €). Le palier 101–1000 baisse de 27 €.
+- L'estimation électronique + méca baisse d'autant : 87,68 / 65,28 / 64,49 / 64,49 €. L'anomalie du N&B 300 PPI, plus cher à 101–1000 qu'à ≤ 100, disparaît.
+- Cours au 14/11/2026 : USD 0,8935 → 0,9072 (+1,5 %). Middle frame + cadre alu : 18,76 → 19,05 €. Packaging du sheet : 8,93 → 9,07 €. Transport aérien : 12,37 → 12,54 €.
+
+### Impact (site, 400 €, CAC max par palier : ≤ 100 / 101–1000 / 1001–5000 / ≥ 5001)
+| Modèle | v2.0 | v2.1 |
+|---|---|---|
+| Couleur | 90 / 90 / 110 / 129 € | 86 / 118 / 129 / 129 € |
+| N&B 150 PPI | 43 / 53 / 91 / 120 € | 38 / 80 / 109 / 119 € |
+| N&B 300 PPI | 87 / 79 / 92 / 113 € | 83 / 106 / 110 / 112 € |
+
+### Points connus
+- Le devis SeekInk n'a que 3 paliers : ≥ 5001 reprend le prix de 1001–5000.
+- Le sheet contient de nouveaux devis packaging (onglet Packaging, ≈ 2,60–10 €/u) et cadre (onglet Cadre, Nielsen 14–19 €/u). Ils ne sont pas encore intégrés à la BOM, donc pas au simulateur.
+
 ## [2.0.0] — 2026-10-14
 
 Mise à jour sur la base du sheet « Structure de coût PixelFrame » d'Arthur (14/10/2026).
